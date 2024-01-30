@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./assets/styles.css">
+
+  <!-- CDN VUE -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div class="cart">Cart: {{ cart }}</div>
+    <div class="product-display">
+      <div class="product-container">
+        <div class="product-image">
+            <!-- <img v-bind:src="image" alt="img-product"> -->
+          <img :src="image" alt="img-product">
+        </div>
+        <div class="product-info">
+          <h1>{{ product_title }}</h1>
+          <p v-if="inStock >= 10">In stock</p>
+          <p v-else-if="inStock >= 1 && inStock <= 9">Almost of out</p>
+          <p v-else>Out of stock</p>
+
+          <ul>
+            <li v-for="detail in details">
+              {{ detail }}
+            </li>
+          </ul>
+          <div 
+            v-for="variant in variants" 
+            :key="variant.id"
+            v-on:mouseover="changeImage(variant.image)">
+            {{ variant.color }}
+          </div>
+
+          <button class="button" @click="addToCart">Add to cart</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue
+  
+    createApp({
+      setup() {
+
+        const cart = ref(0);
+        const addToCart = () => {
+          cart.value += 1;
+        }
+
+        const image = ref('./assets/images/t-shirt-blue.png');
+        const changeImage = (variantImage) => {
+          image.value = variantImage
+        }
+
+        return {
+          image,
+          product_title: 'T-shirt',
+          inStock: 15,
+          details: [
+                    '50% cotton',
+                    '30% polyester',
+                    '20% wool'
+                    ],
+          variants: [
+                  {id:1, color:'blue', image: "./assets/images/t-shirt-blue.png"},
+                  {id:2, color:'green', image: "./assets/images/t-shirt-green.png"}
+                  ],
+          cart,
+          addToCart,
+          changeImage
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
