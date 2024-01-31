@@ -19,11 +19,8 @@
           <img :src="image" alt="img-product">
         </div>
         <div class="product-info">
-          <h1>{{ product_title }}</h1>
-          <p v-if="inStock >= 10">In stock</p>
-          <p v-else-if="inStock >= 1 && inStock <= 9">Almost of out</p>
-          <p v-else>Out of stock</p>
-
+          <h1>{{ titleWithBrand }}</h1>
+          <h1>{{ inStockComputed }}</h1>
           <ul>
             <li v-for="detail in details">
               {{ detail }}
@@ -49,7 +46,7 @@
   </div>
 
   <script>
-    const { createApp, ref } = Vue
+    const { createApp, ref, computed } = Vue
   
     createApp({
       setup() {
@@ -64,10 +61,26 @@
           image.value = variantImage
         }
 
+        const product_title = 'T-shirt';
+        const brand = 'MyBrand';
+        const titleWithBrand = computed(() => {
+          return product_title + " " + brand;
+
+        });
+
+        const inStock = 20;
+        const inStockComputed = computed(() => {
+          if(inStock >= 10) {
+            return "In stock"
+          } else if(inStock < 10 && inStock >= 1) {
+            return "Almost of out"
+          } else {
+            return "Out of stock"
+          }
+        });
+
         return {
           image,
-          product_title: 'T-shirt',
-          inStock: 10,
           details: [
                     '50% cotton',
                     '30% polyester',
@@ -79,7 +92,9 @@
                   ],
           cart,
           addToCart,
-          changeImage
+          changeImage,
+          titleWithBrand,
+          inStockComputed
         }
       }
     }).mount('#app')
